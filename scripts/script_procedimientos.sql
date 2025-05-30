@@ -593,3 +593,17 @@ BEGIN
     END
 END;
 GO
+
+CREATE PROCEDURE AutenticarUsuario
+    @nombre_usuario VARCHAR(50),
+    @contrasena VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT id_usuario, nombre_usuario, rol, email
+    FROM Usuario
+    WHERE nombre_usuario = @nombre_usuario
+    AND contrasena = @contrasena;
+END;
+GO
+

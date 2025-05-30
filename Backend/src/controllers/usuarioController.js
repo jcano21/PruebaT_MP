@@ -8,7 +8,7 @@ const usuarioController = {
       const pool = await poolPromise;
       const result = await pool.request()
         .input('nombre_usuario', sql.VarChar(50), nombre_usuario)
-        .input('contrasena', sql.VarChar(100), contrasena) // Debe encriptarse en producción
+        .input('contrasena', sql.VarChar(100), contrasena)
         .input('rol', sql.VarChar(50), rol)
         .input('email', sql.VarChar(100), email)
         .execute('InsertarUsuario');
