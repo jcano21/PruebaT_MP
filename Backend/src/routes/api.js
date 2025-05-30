@@ -6,6 +6,9 @@ const usuarioController = require('../controllers/usuarioController');
 const fiscalController = require('../controllers/fiscalController');
 const casoController = require('../controllers/casoController');
 const logReasignacionController = require('../controllers/logReasignacionController');
+const authController = require('../controllers/authController');
+
+router.post('/login', authController.login);
 
 // Rutas para Fiscalía
 router.post('/fiscalias', fiscaliaController.insertarFiscalia);
