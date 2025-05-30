@@ -16,22 +16,25 @@ const casoController = {
     }
   },
 
-  actualizarCaso: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { descripcion, id_estado, id_fiscalia } = req.body;
-      const pool = await poolPromise;
-      await pool.request()
-        .input('id_caso', sql.Int, id)
-        .input('descripcion', sql.Text, descripcion)
-        .input('id_estado', sql.Int, id_estado)
-        .input('id_fiscalia', sql.Int, id_fiscalia)
-        .execute('ActualizarCaso');
-      res.status(200).json({ message: 'Caso actualizado' });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  },
+actualizarCaso: async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { descripcion, id_estado, id_fiscalia, id_fiscal } = req.body;
+    const pool = await poolPromise;
+
+    await pool.request()
+      .input('id_caso', sql.Int, id)
+      .input('descripcion', sql.Text, descripcion)
+      .input('id_estado', sql.Int, id_estado)
+      .input('id_fiscalia', sql.Int, id_fiscalia)
+      .input('id_fiscal', sql.Int, id_fiscal)
+      .execute('ActualizarCaso');
+
+    res.status(200).json({ message: 'Caso actualizado' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+},
 
   consultarCaso: async (req, res) => {
     try {

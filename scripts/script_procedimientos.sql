@@ -388,26 +388,33 @@ END;
 GO
 
 -- Actualización
-CREATE PROCEDURE ActualizarCaso
+CREATE PROCEDURE ActualizarCaso 
     @id_caso INT,
     @descripcion TEXT,
     @id_estado INT,
-    @id_fiscalia INT
+    @id_fiscalia INT,
+    @id_fiscal INT
 AS
 BEGIN
     SET NOCOUNT ON;
+
     BEGIN TRY
+        -- Validaciones
         IF NOT EXISTS (SELECT 1 FROM Caso WHERE id_caso = @id_caso)
             RAISERROR ('Caso no encontrado', 16, 1);
         ELSE IF NOT EXISTS (SELECT 1 FROM EstadoCaso WHERE id_estado = @id_estado)
             RAISERROR ('Estado no encontrado', 16, 1);
         ELSE IF NOT EXISTS (SELECT 1 FROM Fiscalia WHERE id_fiscalia = @id_fiscalia)
             RAISERROR ('Fiscalía no encontrada', 16, 1);
+        ELSE IF NOT EXISTS (SELECT 1 FROM Fiscal WHERE id_fiscal = @id_fiscal)
+            RAISERROR ('Fiscal no encontrado', 16, 1);
         ELSE
+            -- Actualización
             UPDATE Caso
             SET descripcion = @descripcion,
                 id_estado = @id_estado,
-                id_fiscalia = @id_fiscalia
+                id_fiscalia = @id_fiscalia,
+                id_fiscal = @id_fiscal
             WHERE id_caso = @id_caso;
     END TRY
     BEGIN CATCH
