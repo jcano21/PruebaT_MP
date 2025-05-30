@@ -1,0 +1,61 @@
+version: '3.8'
+services:
+  db:
+    build:
+      context: ./scripts
+      dockerfile: Dockerfile
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Pruebamp2025$
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "Pruebamp2025$", "-Q", "SELECT 1"]
+      interval: 10s
+      retries: 5
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_USER=sa
+      - DB_PASSWORD=Pruebamp2025$
+      - DB_HOST=db
+      - DB_PORT=1433
+      - DB_NAME=MPCasosDB
+      - PORT=3001
+      - JWT_SECRET=jwtsecret2025
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:3001/api
+      - PORT=3000
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  sql-data:
+
+networks:
+  app-network:
+    driver: bridge
